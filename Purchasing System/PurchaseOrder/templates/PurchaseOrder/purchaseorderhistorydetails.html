@@ -8,7 +8,7 @@
             <label class="labelpodetails fontlabel">Time Created: </label>
             <label>{{time_created}}</label>
         </div>
-    <form class="purchaseordersubmission margintop" action="purchaseorderhistory" method="POST">
+    <form class="purchaseordersubmission margintop" action="purchaseorderhistory" method="GET">
      {% csrf_token %}
         <div class="row">
            <div class="col">
@@ -21,7 +21,7 @@
             </div>
             <div class="col">
                 <label class="labelpodetails fontlabel">Company Information</label>
-              <textarea type="text" class="infobox" name="staff_info" readonly>{{staff.person_name}} &#13;&#10;{{staff.person_address}} &#13;&#10;{{staff.person_phone_number}}</textarea>
+              <textarea type="text" class="infobox" name="staff_info" readonly>{{staff_info.person_name}} &#13;&#10;{{staff_info.person_address}} &#13;&#10;{{staff_info.person_phone_number}}</textarea>
             </div>
             <div class="col">
                 <label class="labelpodetails fontlabel">Vendor Information</label>
@@ -57,6 +57,7 @@
                  <td>{{r.quantity}}</td>
                  <td>{{r.unit_price}}</td>
                  <td>{{r.total_price}}</td>
+
             </tr>
               {% endfor %}
           </tbody>

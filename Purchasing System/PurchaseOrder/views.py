@@ -42,14 +42,16 @@ def fillingpurchaseorder(request):
 
     context = {}
     quo_id = request.GET['quo_id']
-    po_id = 1001
+    #po_id = 1001
 
-    purchaseorders = PurchaseOrder.objects.all()
-    numberpo = len(purchaseorders)
-    po_id = int(po_id) + int(numberpo) 
+    #purchaseorders = PurchaseOrder.objects.all()
+    #numberpo = len(purchaseorders)
+   # po_id = int(po_id) + int(numberpo) 
 
-    staff_id = request.user
-    staff = Person.objects.get(user_id = staff_id)
+    po_id = random.randint(1000000,9999999)
+
+    #staff_id = request.user
+    #staff = Person.objects.get(user_id = staff_id)
 
     try: 
 
@@ -70,7 +72,7 @@ def fillingpurchaseorder(request):
                     'title': 'Purchase Order Form',
                     'purchase_order_id': 'PO' + str(po_id),
                     'quotation_id': quo_id, 
-                    'staff' : staff,
+                    'staff_id' : quotations.person_id.person_id,
                     'vendor_id': quotations.vendor_id.vendor_id,
                     'rows':item_list
                 }
@@ -89,9 +91,12 @@ def purchaseorderconfirmation(request):
 
     context = {}
     po_id = request.POST['purchase_order_id']
-    quotation_id = request.POST['quotation_id']
-    staff_id = request.user.id 
-    staff = Person.objects.get(user_id = staff_id)
+    #quotation_id = request.POST['quotation_id']
+    quo_id = request.POST['quotation_id']
+    #staff_id = request.user.id 
+    staff_id = request.POST['staff_id']
+    #staff = Person.objects.get(staff_id = staff_id)
+    staff_info = Person.objects.get(person_id = staff_id)
     vendor_id = request.POST['vendor_id']
     shipping_inst = request.POST['shipping_inst']
     description = request.POST['description']
@@ -138,13 +143,14 @@ def purchaseorderconfirmation(request):
 
     context = {
             'title': 'Purchase Order Confirmation',
-            'quotation_id' : quotation_id,
+            'quotation_id' : quo_id,
             'purchase_order_id' : po_id,
+            'staff_id' : staff_id,
             'vendor_id' : vendor_id,
             'shipping_inst' : shipping_inst,
             'grand_total': grand_total,
             'rows' : items,
-            'staff' : staff,
+            'staff_info' : staff_info,
             'vendor_info' : vendor_info,
             'description' : description
         }
@@ -163,8 +169,8 @@ def purchaseorderdetails(request):
     vendor_id = request.POST['vendor_id']
     description = request.POST['description']
 
-    staff_id = request.user.id 
-    staff = Person.objects.get(user_id = staff_id)
+    staff_id = request.POST['staff_id']
+    staff_info = Person.objects.get(person_id = staff_id)
     quotation = Quotation.objects.get(quotation_id = quotation_id)
     vendor_info = Vendor.objects.get(vendor_id = vendor_id)
 
@@ -213,7 +219,8 @@ def purchaseorderdetails(request):
                             shipping_instructions = shipping_inst, 
                             time_created = current_time,
                             total_price = grand_total, 
-                            person_id = staff,
+                            #person_id = staff_id,
+                            person_id = staff_info,
                             description = description,
                             vendor_id = vendor_info, 
                             quotation_id = quotation)
@@ -240,21 +247,23 @@ def purchaseorderdetails(request):
         x.add_row([item['item_id'],item['item_name'],item['quantity'],item['unit_price'],item['total_price']])
 
     subject = 'PURCHASE ORDER INFORMATION: '+ po_id
-    message = 'This is the Purchase Order Information: \n'+'Person In Charge: '+staff.person_name+'\n'+'Ship to:'+staff.person_address+ '\n' +'Purchase Order Number: ' + po_id + '\n'+'Quotation ID: ' + quotation.quotation_id + '\n'+'Time Issued: ' + str(current_time) + '\n'+'Vendor ID: ' + vendor_id + '\n'+'Description: ' + description + '\n'+'Shipping Instructions: ' + shipping_inst + '\n'+ str(x) +'\n'
+    message = 'This is the Purchase Order Information: \n'+'Person In Charge: '+staff_info.person_name+'\n'+'Ship to:'+staff_info.person_address+ '\n' +'Purchase Order Number: ' + po_id + '\n'+'Quotation ID: ' + quotation.quotation_id + '\n'+'Time Issued: ' + str(current_time) + '\n'+'Vendor ID: ' + vendor_id + '\n'+'Description: ' + description + '\n'+'Shipping Instructions: ' + shipping_inst + '\n'+ str(x) +'\n'
 
     email_from = settings.EMAIL_HOST_USER
-    recipient_list = [vendor_info.vendor_email,]
-    send_mail( subject, message, email_from, recipient_list )
+    recipient_list = [vendor_info.vendor_email]
+    send_mail( subject, message, 'purchasing.system.2020.group1@gmail.com', recipient_list, fail_silently=False )
 
     # info pass to html
     context = {
             'title': 'Purchase Order Details',
             'quotation_id' : quotation_id,
             'purchase_order_id' : po_id,
+            'staff_id' : staff_id,
             'vendor_id' : vendor_id,
             'shipping_inst' : shipping_inst,
             'rows' : items,
-            'staff' : staff,
+            #'staff' : staff,
+            'staff_info' : staff_info,
             'vendor_info' : vendor_info,
             'grand_total': grand_total,
             'time_created': current_time,
@@ -269,16 +278,19 @@ def purchaseorderhistorydetails(request):
     pk = request.GET['po_id']
     purchase_order = PurchaseOrder.objects.get(purchase_order_id = pk)
     items = PurchaseOrderItem.objects.filter(purchase_order_id = pk)
-    staff = Person.objects.get(person_id=purchase_order.person_id.person_id)
+    #staff = Person.objects.get(person_id=purchase_order.person_id.person_id)
 
     context = {
 
             'title': 'Purchase Order Details',
             'quotation_id' : purchase_order.quotation_id.quotation_id,
             'purchase_order_id' : pk,
+            'staff_id' : purchase_order.person_id.person_id,
+            'vendor_id' : purchase_order.vendor_id.vendor_id,
             'shipping_inst' : purchase_order.shipping_instructions,
             'rows' : items,
-            'staff' : staff,
+            #'staff' : staff,
+            'staff_info' : purchase_order.person_id,
             'vendor_info' : purchase_order.vendor_id,
             'grand_total': purchase_order.total_price,
             'time_created': purchase_order.time_created,
