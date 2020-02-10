@@ -17,6 +17,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.forms import formset_factory
 from django.http.request import QueryDict
 from decimal import Decimal
+from django.shortcuts import redirect
+from django.contrib import messages
 import random
 import datetime 
 
@@ -71,19 +73,24 @@ def purchaserequisitionconfirmation(request):
     items_length = len(items_id)
     grand_total = Decimal(0)
 
-    while i < items_length:
-        total= Decimal(quantity[i]) * Decimal(unit_price[i])
-        item_table = {
-            'item_name': items_name[i],
-            'item_id': items_id[i],
-            'quantity' : quantity[i],
-            'description': description[i],
-            'unit_price': unit_price[i],
-            'total_price': total
-        }
-        items.append(item_table)
-        i = i + 1
-        grand_total = grand_total + total
+    try:
+        while i < items_length:
+            total= Decimal(quantity[i]) * Decimal(unit_price[i])
+            item_table = {
+                'item_name': items_name[i],
+                'item_id': items_id[i],
+                'quantity' : quantity[i],
+                'description': description[i],
+                'unit_price': unit_price[i],
+                'total_price': total
+            }
+            items.append(item_table)
+            i = i + 1
+            grand_total = grand_total + total
+    except:
+        messages.error(request, 'Invalid data type')
+        return redirect('/purchaserequisitionform')
+
     print(items)
 
     context = {

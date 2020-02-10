@@ -1,7 +1,7 @@
 ﻿{% extends "app/layout.html" %}
 
 {% block content %}
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
 
@@ -23,7 +23,11 @@
 });
 </script>
 <div class="formpurchaseorder margintop" >
-
+     {% if messages %}
+	    {% for message in messages %}
+	       <div style="position:fixed; background:rgb(255, 191, 191); border:0.5px solid rgb(116, 47, 47); padding:1em; margin-top:-10px;border-radius:0 0 0.5em 0.5em; margin-left:25%; width:40%;text-align:center;">{{ message }}</div>
+	    {% endfor %}
+    {% endif %}
     <form class="purchaseordersubmission" action="purchaserequisitionconfirmation" method="POST">
       {% csrf_token %}
         <div class="row margintop">
