@@ -8,7 +8,7 @@
             <label class="labelpodetails fontlabel">Time Created: </label>
             <label>{{time_created}}</label>
         </div>
-    <form class="purchaseordersubmission margintop" action="purchaseorderhistory" method="GET">
+    <form class="purchaseordersubmission margintop" action="purchaseorderhistory" method="POST">
      {% csrf_token %}
         <div class="row">
            <div class="col">
