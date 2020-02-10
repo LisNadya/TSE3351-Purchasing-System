@@ -26,7 +26,8 @@ SECRET_KEY = '2f6676b8-3f0a-4152-a8d4-57e5abcf55ac'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS =  []
+#ALLOWED_HOSTS =  ['localhost', '127.0.0.1', '[::1]']
+ALLOWED_HOSTS =  ['*']
 
 
 # Application definition
@@ -130,3 +131,15 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
+
+#Test email
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_HOST = 'localhost'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_USE_SLS = False
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'purchasing.system.2020.group1@gmail.com'
+EMAIL_HOST_PASSWORD = 'purchasing_system'
+DEFAULT_EMAIL = EMAIL_HOST_USER
+EMAIL_FROM = EMAIL_HOST_USER 
