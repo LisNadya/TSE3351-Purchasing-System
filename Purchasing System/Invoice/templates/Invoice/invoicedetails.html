@@ -1,6 +1,18 @@
 ﻿{% extends "app/layout.html" %}
 
 {% block content %}
+
+<style>
+    .infobox {
+      width: 600px;
+      height: 100px;
+      padding-left: 10px;
+      position: relative;
+      left: 15px;
+    }
+
+</style>
+
 <div class="formpurchaseorder" >
     
     
@@ -21,10 +33,14 @@
             </div>
             <div class="col">
                 <label class="labelpodetails">Company Information</label>
+            </div>
+            <div class="row">
               <textarea type="text" class="infobox" name="staff_info" readonly>{{staff_info.person_name}} &#13;&#10;{{staff_info.person_address}} &#13;&#10;{{staff_info.person_phone_number}}</textarea>
             </div>
             <div class="col">
                 <label class="labelpodetails">Vendor Information</label>
+            </div>
+            <div class="row">
               <textarea type="text" class="infobox" name="vendor_info"  readonly>{{vendor_info.vendor_name}} &#13;&#10;{{vendor_info.vendor_address}} &#13;&#10;{{vendor_info.vendor_phone_number}}</textarea>
             </div>
         </div>
